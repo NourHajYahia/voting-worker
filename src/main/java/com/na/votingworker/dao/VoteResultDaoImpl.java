@@ -21,7 +21,7 @@ public class VoteResultDaoImpl implements VoteResultDao {
 
     @Override
     public void increaseVoteResultByAnimal(AnimalEnum animalEnum) {
-        Optional<VoteResult> voteResultDb = voteResultMongoRepository.findById(animalEnum);
+        Optional<VoteResult> voteResultDb = voteResultMongoRepository.findByAnimal(animalEnum);
         if (voteResultDb.isEmpty()) {
             VoteResult voteResult = new VoteResult(animalEnum);
             voteResultMongoRepository.save(voteResult);

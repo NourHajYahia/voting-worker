@@ -57,4 +57,31 @@ public class RedisStreamService {
                 );
 
     }
+
+    public void listenToStream(String streamKey) {
+//        StreamOffset<String> streamOffset = StreamOffset.create("votingstream", ReadOffset.latest());
+        StreamOffset<String> votingstream = StreamOffset.fromStart("votingstream");
+        Flux<ObjectRecord<String, String>> stream = redisTemplate
+                .opsForStream()
+                .read(String.class, votingstream)
+                .repeat();
+
+        stream.flatMap(record -> {
+                    String id = record.getId().getValue();
+                    System.out.println("Processing record ID: " + id);
+                    String value = record.getValue();
+                    AnimalEnum animalEnum = AnimalEnum.valueOf(value.toUpperCase());
+                    voteResultDao.increaseVoteResultByAnimal(animalEnum);
+
+                    // Acknowledge the message after processing
+                    return redisTemplate
+                            .opsForStream()
+                            .delete(record)
+                            .doOnSuccess(success -> System.out.println("deleted record ID: " + id));
+                })
+                .subscribe(
+                        success -> System.out.println("Successfully processed records"),
+                        error -> System.err.println("Error during stream processing: " + error)
+                );
+    }
 }
