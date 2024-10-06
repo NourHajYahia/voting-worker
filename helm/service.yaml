@@ -6,6 +6,9 @@ metadata:
     name: worker-app-service
     app: demo-voting-app
 spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
   selector:
     name: worker-app-pod
     app: demo-voting-app

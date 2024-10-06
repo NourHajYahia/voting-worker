@@ -8,4 +8,6 @@ metadata:
 spec:
   containers:
     - name: worker-app
-      image: ../:v1
+      image: gipsyone/worker-app:latest
+      ports:
+        - containerPort: 80
