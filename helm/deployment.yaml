@@ -24,4 +24,9 @@ spec:
           image: gipsyone/worker-app:latest
           ports:
             - containerPort: 80
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+            - name: MONGO_HOST
+              value: "mongo"
       
